@@ -1,6 +1,8 @@
 package com.yash.shopkeeper.Shopkeeper.Profile.service;
 
+import com.yash.shopkeeper.Shopkeeper.Profile.dto.ShopkeeperLoginDto;
 import com.yash.shopkeeper.Shopkeeper.Profile.dto.ShopkeeperRegisterDto;
+import com.yash.shopkeeper.Shopkeeper.Profile.dto.ShopkeeperUpdatePasswordDto;
 import com.yash.shopkeeper.Shopkeeper.Profile.entity.ShopkeeperProfile;
 import com.yash.shopkeeper.Shopkeeper.Profile.repo.ShopkeeperRepo;
 import org.apache.logging.log4j.LogManager;
@@ -66,11 +68,68 @@ public class ShopkeeperServiceImpl implements ShopkeeperService {
         List<ShopkeeperProfile> shopkeeperProfiles = shopkeeperRepo.findAll();
         if(shopkeeperProfiles.isEmpty()){
             log.info("There is no shopKeepers registered with us");
-            throw new RuntimeException("There are no shopKeepers registered with us");
+            return shopkeeperProfiles;
         }
         else {
             log.info("The list for all the shopkeeper is here");
             return shopkeeperProfiles;
+        }
+    }
+
+    @Override
+    public boolean updatePassword(ShopkeeperUpdatePasswordDto shopkeeperUpdatePasswordDto) {
+        Date date = new Date();
+        log.info("Updating the password, checking for emailId");
+        ShopkeeperProfile shopkeeperProfileFromDb = shopkeeperRepo.findByEmailId(shopkeeperUpdatePasswordDto.getEmailId());
+        if(shopkeeperProfileFromDb == null){
+            log.info("The emailId not found");
+            return false;
+        }
+        else {
+            String userId = shopkeeperProfileFromDb.getShopKeeperId();
+            Optional<ShopkeeperProfile> shopkeeperProfileByUserId = shopkeeperRepo.findById(userId);
+            ShopkeeperProfile shopkeeperProfile = new ShopkeeperProfile();
+            shopkeeperProfile.setShopKeeperId(userId);
+            shopkeeperProfile.setShopKeeperFirstName(shopkeeperProfileFromDb.getShopKeeperFirstName());
+            shopkeeperProfile.setShopKeeperLastName(shopkeeperProfileFromDb.getShopKeeperLastName());
+            shopkeeperProfile.setEmailId(shopkeeperProfileFromDb.getEmailId());
+            shopkeeperProfile.setOccupationType(shopkeeperProfileFromDb.getOccupationType());
+            shopkeeperProfile.setBalance(shopkeeperProfileFromDb.getBalance());
+            shopkeeperProfile.setCreatedAt(shopkeeperProfileFromDb.getCreatedAt());
+            shopkeeperProfile.setPassword(shopkeeperUpdatePasswordDto.getUpdatePassword());
+            shopkeeperProfile.setConfirmPassword(shopkeeperUpdatePasswordDto.getUpdateConfirmPassword());
+            shopkeeperProfile.setUpdatedAt(new SimpleDateFormat("dd-MM-yyyy HH:mm:ss").format(date));
+            shopkeeperRepo.save(shopkeeperProfile);
+            log.info("Updating the passwords for the shopkeeper");
+            return true;
+        }
+    }
+
+    @Override
+    public boolean deleteShopkeeper(String userId) {
+        Optional<ShopkeeperProfile> shopkeeperProfileFromDB = shopkeeperRepo.findById(userId);
+        if(shopkeeperProfileFromDB == null){
+            log.info("The userId does not exist.");
+            return false;
+        }
+        else {
+            log.info("Deleting the shopkeeper profile by userId");
+            ShopkeeperProfile isDeleted = shopkeeperRepo.deleteByUserId(userId);
+            log.info("The shopkeeper profile is deleted");
+            return true;
+        }
+    }
+
+    @Override
+    public ShopkeeperProfile loginShopkeeper(ShopkeeperLoginDto shopkeeperLoginDto) {
+        ShopkeeperProfile shopkeeperProfile = shopkeeperRepo.findByEmailAndPassword(shopkeeperLoginDto.getEmailId(), shopkeeperLoginDto.getPassword());
+        if(shopkeeperProfile == null){
+            log.error("The emailId and password is not correct for the user");
+            return shopkeeperProfile;
+        }
+        else {
+            log.info("The details are fetched and the user is logged in");
+            return shopkeeperProfile;
         }
     }
 
