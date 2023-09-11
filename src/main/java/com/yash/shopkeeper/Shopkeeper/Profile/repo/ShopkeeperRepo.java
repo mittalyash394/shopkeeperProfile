@@ -9,4 +9,10 @@ public interface ShopkeeperRepo extends MongoRepository<ShopkeeperProfile, Strin
 
     @Query("{'emailId' : ?0}")
     ShopkeeperProfile findByEmailId(String emailId);
+
+    @Query(value="{'_id' : ?0}", delete = true)
+    ShopkeeperProfile deleteByUserId(String userId);
+
+    @Query("{'emailId' : ?0 , 'password' : ?1}")
+    ShopkeeperProfile findByEmailAndPassword(String emailId, String password);
 }

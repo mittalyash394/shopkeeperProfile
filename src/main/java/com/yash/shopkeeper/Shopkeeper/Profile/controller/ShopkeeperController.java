@@ -1,6 +1,8 @@
 package com.yash.shopkeeper.Shopkeeper.Profile.controller;
 
+import com.yash.shopkeeper.Shopkeeper.Profile.dto.ShopkeeperLoginDto;
 import com.yash.shopkeeper.Shopkeeper.Profile.dto.ShopkeeperRegisterDto;
+import com.yash.shopkeeper.Shopkeeper.Profile.dto.ShopkeeperUpdatePasswordDto;
 import com.yash.shopkeeper.Shopkeeper.Profile.entity.ShopkeeperProfile;
 import com.yash.shopkeeper.Shopkeeper.Profile.service.ShopkeeperService;
 import org.apache.logging.log4j.LogManager;
@@ -47,8 +49,54 @@ public class ShopkeeperController {
     public List<ShopkeeperProfile> getAllShopKeepers(){
         log.info("Getting all the shopkeepers present in the DB");
         List<ShopkeeperProfile> list = shopkeeperService.getAllShopKeepers();
-        log.info("The shopKeepers list is here");
-        return list;
+        if(list.isEmpty()){
+            return list;
+        }
+        else {
+            log.info("The shopKeepers list is here");
+            return list;
+        }
+    }
+
+
+    @PutMapping(value = "/updatePassword", headers = "Accept=application/json")
+    public boolean updatePassword(@RequestBody ShopkeeperUpdatePasswordDto shopkeeperUpdatePasswordDto){
+        log.info("Updating the password");
+        boolean isUpdated = shopkeeperService.updatePassword(shopkeeperUpdatePasswordDto);
+        if(isUpdated){
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+
+
+    @DeleteMapping(value = "/deleteShopkeeperProfileByUserId/{userId}", headers = "Accept=application/json")
+    public boolean deleteShopkeeperProfileByUserId(@PathVariable String userId){
+        log.info("Deleting the shopkeeper profile by the userId");
+        boolean isDeleted = shopkeeperService.deleteShopkeeper(userId);
+        if(isDeleted){
+            log.info("The user is deleted");
+            return true;
+        }
+        else {
+            log.error("The user is not deleted");
+            return false;
+        }
+    }
+
+    @PostMapping(value = "/login", headers = "Accept=application/json")
+    public ShopkeeperProfile loginShopkeeper(@RequestBody ShopkeeperLoginDto shopkeeperLoginDto){
+        ShopkeeperProfile shopkeeperProfile = shopkeeperService.loginShopkeeper(shopkeeperLoginDto);
+        if(shopkeeperProfile == null){
+            log.error("Unable to login");
+            return null;
+        }
+        else {
+            log.info("The login is successful");
+            return shopkeeperProfile;
+        }
     }
 
 }
