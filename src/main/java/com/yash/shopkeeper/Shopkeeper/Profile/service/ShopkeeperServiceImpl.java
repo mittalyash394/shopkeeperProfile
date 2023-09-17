@@ -108,7 +108,7 @@ public class ShopkeeperServiceImpl implements ShopkeeperService {
     @Override
     public boolean deleteShopkeeper(String userId) {
         Optional<ShopkeeperProfile> shopkeeperProfileFromDB = shopkeeperRepo.findById(userId);
-        if(shopkeeperProfileFromDB == null){
+        if(shopkeeperProfileFromDB.isEmpty()){
             log.info("The userId does not exist.");
             return false;
         }
@@ -125,7 +125,7 @@ public class ShopkeeperServiceImpl implements ShopkeeperService {
         ShopkeeperProfile shopkeeperProfile = shopkeeperRepo.findByEmailAndPassword(shopkeeperLoginDto.getEmailId(), shopkeeperLoginDto.getPassword());
         if(shopkeeperProfile == null){
             log.error("The emailId and password is not correct for the user");
-            return shopkeeperProfile;
+            return null;
         }
         else {
             log.info("The details are fetched and the user is logged in");
