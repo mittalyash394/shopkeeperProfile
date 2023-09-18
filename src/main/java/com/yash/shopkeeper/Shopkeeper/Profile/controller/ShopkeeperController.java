@@ -30,6 +30,8 @@ public class ShopkeeperController {
     private PayloadCheck payloadCheck;
 
     public static String REGISTER_PAYLOAD_WRONG = "THE REGISTER PAYLOAD IS NOT CORRECT FOR THE SHOPKEEPER";
+
+    public static String ALREADY_PRESENT_SHOPKEEPER = "This shopkeeper is already present in the DB";
     @Value("${spring.application.name}")
     String applicationName;
 
@@ -51,7 +53,7 @@ public class ShopkeeperController {
             shopkeeperProfile = shopkeeperService.register(shopkeeperRegisterDto);
         } catch (AlreadyPresentShopkeeperException alreadyPresentShopkeeperException) {
             log.error(alreadyPresentShopkeeperException.toString());
-            throw new AlreadyPresentShopkeeperException("This shopkeeper is already present in the DB");
+            throw new AlreadyPresentShopkeeperException(ALREADY_PRESENT_SHOPKEEPER);
         }
         log.info(shopkeeperProfile);
         return shopkeeperProfile;
