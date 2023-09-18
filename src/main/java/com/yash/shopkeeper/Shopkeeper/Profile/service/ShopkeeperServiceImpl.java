@@ -4,6 +4,7 @@ import com.yash.shopkeeper.Shopkeeper.Profile.dto.ShopkeeperLoginDto;
 import com.yash.shopkeeper.Shopkeeper.Profile.dto.ShopkeeperRegisterDto;
 import com.yash.shopkeeper.Shopkeeper.Profile.dto.ShopkeeperUpdatePasswordDto;
 import com.yash.shopkeeper.Shopkeeper.Profile.entity.ShopkeeperProfile;
+import com.yash.shopkeeper.Shopkeeper.Profile.exceptions.AlreadyPresentShopkeeperException;
 import com.yash.shopkeeper.Shopkeeper.Profile.repo.ShopkeeperRepo;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -33,7 +34,7 @@ public class ShopkeeperServiceImpl implements ShopkeeperService {
         log.info(shopkeeperProfileFromDB);
         if (shopkeeperProfileFromDB != null) {
             log.info("The shopkeeper is already present in the database");
-            throw new RuntimeException("This shopkeeper is already present in the DB");
+            throw new AlreadyPresentShopkeeperException("This shopkeeper is already present in the DB");
         } else {
             log.info("This shopKeeper is not present in the DB, saving it with all the details " + shopkeeperRegisterDto);
             shopkeeperProfile.setShopKeeperFirstName(shopkeeperRegisterDto.getShopKeeperFirstName());
