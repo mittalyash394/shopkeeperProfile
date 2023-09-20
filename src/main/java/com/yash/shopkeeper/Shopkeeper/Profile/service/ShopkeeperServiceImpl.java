@@ -5,6 +5,9 @@ import com.yash.shopkeeper.Shopkeeper.Profile.dto.ShopkeeperRegisterDto;
 import com.yash.shopkeeper.Shopkeeper.Profile.dto.ShopkeeperUpdatePasswordDto;
 import com.yash.shopkeeper.Shopkeeper.Profile.entity.ShopkeeperProfile;
 import com.yash.shopkeeper.Shopkeeper.Profile.exceptions.AlreadyPresentShopkeeperException;
+import com.yash.shopkeeper.Shopkeeper.Profile.exceptions.EmailIdNotFoundException;
+import com.yash.shopkeeper.Shopkeeper.Profile.exceptions.ShopkeeperNotFound;
+import com.yash.shopkeeper.Shopkeeper.Profile.exceptions.WrongCredentialsForShopkeeper;
 import com.yash.shopkeeper.Shopkeeper.Profile.repo.ShopkeeperRepo;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -56,7 +59,7 @@ public class ShopkeeperServiceImpl implements ShopkeeperService {
         log.info("Getting the shopKeeper profile by the userId");
         if (shopkeeperProfileOptional.isEmpty()) {
             log.info("There is no shopkeeper profile found for the given userId");
-            throw new RuntimeException("There is no shopkeeper profile by this userId");
+            throw new ShopkeeperNotFound("There is no shopkeeper profile by this userId");
         } else {
             log.info("The shopkeeper profile is here");
             return shopkeeperProfileOptional.get();
@@ -84,7 +87,7 @@ public class ShopkeeperServiceImpl implements ShopkeeperService {
         ShopkeeperProfile shopkeeperProfileFromDb = shopkeeperRepo.findByEmailId(shopkeeperUpdatePasswordDto.getEmailId());
         if(shopkeeperProfileFromDb == null){
             log.info("The emailId not found");
-            return false;
+            throw new EmailIdNotFoundException("The emailId not found");
         }
         else {
             String userId = shopkeeperProfileFromDb.getShopKeeperId();
@@ -111,7 +114,7 @@ public class ShopkeeperServiceImpl implements ShopkeeperService {
         Optional<ShopkeeperProfile> shopkeeperProfileFromDB = shopkeeperRepo.findById(userId);
         if(shopkeeperProfileFromDB.isEmpty()){
             log.info("The userId does not exist.");
-            return false;
+            throw new ShopkeeperNotFound("There is no shopkeeper profile by this userId");
         }
         else {
             log.info("Deleting the shopkeeper profile by userId");
@@ -126,7 +129,7 @@ public class ShopkeeperServiceImpl implements ShopkeeperService {
         ShopkeeperProfile shopkeeperProfile = shopkeeperRepo.findByEmailAndPassword(shopkeeperLoginDto.getEmailId(), shopkeeperLoginDto.getPassword());
         if(shopkeeperProfile == null){
             log.error("The emailId and password is not correct for the user");
-            return null;
+            throw new WrongCredentialsForShopkeeper("The emailId or password is incorrect for the user");
         }
         else {
             log.info("The details are fetched and the user is logged in");
