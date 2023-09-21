@@ -38,11 +38,11 @@ public class ShopkeeperController {
 
     public static String USERID_PAYLOAD_WRONG = "The payload for getShopkeeperById is not correct";
 
-    public static String SHOPKEEPER_NOT_FOUND = "The shopkeeper is not found for the given userId";
+    public static String SHOPKEEPER_NOT_FOUND = "The shopkeeper is not found";
 
     public static String UPDATE_PASSWORD_PAYLOAD_WRONG = "The update password payload is not correct";
 
-    public static String EMAILID_NOT_FOUND = "The emailId not found for the user";
+    public static String EMAILID_NOT_FOUND = "The shopkeeper emailId not found.";
     @Value("${spring.application.name}")
     String applicationName;
 
@@ -149,7 +149,11 @@ public class ShopkeeperController {
         try {
             log.info("The login payload for the shopkeeper is correct");
             shopkeeperProfile = shopkeeperService.loginShopkeeper(shopkeeperLoginDto);
-        }catch (WrongCredentialsForShopkeeper wrongCredentialsForShopkeeper){
+        }catch (ShopkeeperNotFound shopkeeperNotFound){
+            log.error("The emailId not found for the user");
+            throw new ShopkeeperNotFound(SHOPKEEPER_NOT_FOUND);
+        }
+        catch (WrongCredentialsForShopkeeper wrongCredentialsForShopkeeper){
             log.info("The emailId or password is incorrect");
             throw new WrongCredentialsForShopkeeper(WRONG_CREDENTIALS_FOR_THE_USER);
         }

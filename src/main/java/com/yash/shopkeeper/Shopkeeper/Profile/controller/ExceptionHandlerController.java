@@ -144,7 +144,7 @@ public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
         return new ErrorMessage(HttpStatus.BAD_REQUEST.value(),
                 (new SimpleDateFormat("dd-MM-yyyy HH:mm:ss").format(date)),
                 shopkeeperNotFound.getMessage(),
-                "The shopkeeper is not found in the DB"
+                "The shopkeeper is not found with this emailId"
         );
     }
 
