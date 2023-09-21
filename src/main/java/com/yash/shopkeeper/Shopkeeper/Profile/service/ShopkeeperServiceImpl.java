@@ -126,6 +126,11 @@ public class ShopkeeperServiceImpl implements ShopkeeperService {
 
     @Override
     public ShopkeeperProfile loginShopkeeper(ShopkeeperLoginDto shopkeeperLoginDto) {
+        ShopkeeperProfile shopkeeperProfileByEmail = shopkeeperRepo.findByEmailId(shopkeeperLoginDto.getEmailId());
+        if(shopkeeperProfileByEmail == null){
+            log.error("The shopKeeper by emailId not found");
+            throw new ShopkeeperNotFound("No shopkeeper found with the emaildId");
+        }
         ShopkeeperProfile shopkeeperProfile = shopkeeperRepo.findByEmailAndPassword(shopkeeperLoginDto.getEmailId(), shopkeeperLoginDto.getPassword());
         if(shopkeeperProfile == null){
             log.error("The emailId and password is not correct for the user");
