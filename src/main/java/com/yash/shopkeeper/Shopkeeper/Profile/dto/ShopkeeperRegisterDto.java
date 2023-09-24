@@ -15,5 +15,5 @@ public class ShopkeeperRegisterDto {
     private String password;
     private String confirmPassword;
     private String occupationType;
-    private String balance;
+    private double balance;
 }
