@@ -21,7 +21,7 @@ public class ShopkeeperProfile {
     private String password;
     private String confirmPassword;
     private String occupationType;
-    private String balance;
+    private double balance;
     private String createdAt;
     private String updatedAt;
 

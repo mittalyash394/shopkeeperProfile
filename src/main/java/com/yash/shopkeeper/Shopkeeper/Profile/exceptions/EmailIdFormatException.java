@@ -1,10 +1,10 @@
 package com.yash.shopkeeper.Shopkeeper.Profile.exceptions;
 
-public class BalanceNullExceptions extends RuntimeException{
+public class EmailIdFormatException extends RuntimeException{
 
     private static final long serialVersionUID = 1L;
 
-    public BalanceNullExceptions(String message){
+    public EmailIdFormatException(String message){
         super(message);
     }
 
