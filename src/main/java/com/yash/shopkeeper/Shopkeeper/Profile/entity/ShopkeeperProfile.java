@@ -1,6 +1,5 @@
 package com.yash.shopkeeper.Shopkeeper.Profile.entity;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
